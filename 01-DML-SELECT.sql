@@ -173,9 +173,72 @@ FROM employees
 WHERE LOWER(first_name) LIKE '_a%';
 
 -- 이름의 네번째 글자가 a인 사원의 이름과 급여
-
-
+SELECT first_name, salary
+FROM employees
+WHERE first_name LIKE '___a%';
 
 -- 이름이 네글자인 사원들 중에서 두번째 글자가 a인 사원의 이름과 급여
+SELECT first_name, salary
+FROM employees
+WHERE first_name LIKE '_a__';
 
+-- 쿼리 연습
+-- 부서 ID가 90인 사원 중, 급여가 20000 이상인 사원 이름, department_id, 급여
+SELECT first_name, department_id, salary
+FROM employees
+WHERE department_id = 90    --  조건1: 부서가 90
+        AND
+    salary >= 20000;        --  조건2: 급여가 20000 이상
 
+-- 입사일이 11/01/01 ~ 17/12/31 구간에 있는 사원의 목록 이름, 입사일
+--  1. 비교 조합
+SELECT first_name, hire_date
+FROM employees
+WHERE hire_date >= '11/01/01'   -- 조건1
+        AND
+    hire_date <= '17/12/31';    -- 조건2
+
+--  2. BETWEEN 연산자 활용
+SELECT first_name, hire_date
+FROM employees
+WHERE hire_date BETWEEN '11/01/01' AND '17/12/31';
+
+-- manager_id가 100, 120, 147인 사원의 명단. 사원 id, 이름, manager_id
+-- 1. 비교연산자+논리연산자의 조합
+SELECT employee_id, first_name, manager_id
+FROM employees
+WHERE manager_id = 100 OR   --   조건1: 100번 매니저
+    manager_id = 120 OR     --  조건2: 120번 매니저
+    manager_id = 147;        --  조건3: 147번 매니저
+-- 2. IN 연산자 이용
+SELECT employee_id, first_name, manager_id
+FROM employees
+WHERE manager_id IN (100, 120, 147);
+--  두 쿼리를 비교
+
+--------------
+-- ORDER BY
+--------------
+
+-- 특정 컬럼명, 연산식, 별칭, 컬럼 순서를 기준으로 레코드 정렬
+-- ASC(오름차순: default), DESC(내림차순)
+-- 여러개의 컬럼에 적용할 수 있고 ,로 구분
+
+-- 부서 번호의 오름차순으로 정렬, 부서번호, 급여, 이름 출력
+SELECT department_id, salary, first_name
+FROM employees
+ORDER By department_id ASC;    --  ASC 생략 가능
+
+-- 급여가 10000 이상인 직원 대상, 급여의 내림차순으로 출력. 이름, 급여
+SELECT first_name, salary
+FROM employees
+WHERE salary >= 10000
+ORDER BY salary DESC;   --  급여 내림차순
+
+-- 부서 번호, 급여, 이름순으로 출력. 정렬 기준 부서번호 오름차순, 급여 내림차순
+SELECT department_id, salary, first_name
+FROM employees
+ORDER BY department_id ASC,
+        salary DESC;
+
+-- 정렬 기준을 어떻게 세우느냐에 따라 성능, 출력 결과 영향을 미칠 수 있다
