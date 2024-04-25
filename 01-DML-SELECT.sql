@@ -360,3 +360,64 @@ FROM dual;
 SELECT '2012-09-24 13:48:00',
     TO_DATE('2012-09-24 13:48:00', 'YYYY-MM-DD HH24:MI:SS')
 FROM dual;
+
+-- 날짜 연산
+-- Date +/- Number : 특정 날수를 더하거나 뺄 수 있다.
+-- Date - Date : 두 날짜의 경과 일수
+-- Date + Number / 24 : 특정 시간이 지난 후의 날짜 
+SELECT
+    sysdate,
+    sysdate + 1, sysdate - 1,
+    sysdate - TO_DATE('20120924'), 
+    sysdate + 48 / 24   --  48 시간이 지난 후의 날짜
+FROM dual;
+
+
+-- nvl function
+SELECT first_name, 
+    salary, 
+    nvl(salary * commission_pct, 0) commission  -- nvl(표현식, 대체값)
+FROM employees;
+
+-- nvl2 function
+SELECT first_name,
+    salary,
+    nvl2(commission_pct, salary * commission_pct, 0) commission -- nvl2(조건문, null이 아닐때의 값, null일 때의 값)
+FROM employees;
+
+-- CASE function
+-- 보너스를 지급하기로 했습니다.
+--  AD관련 직종에게는 20%, SA관련 직원에게는 10%, IT관련 직원들에게는 8%, 나머지에게는 5%
+SELECT first_name, job_id, salary,
+    SUBSTR(job_id, 1, 2),
+    CASE SUBSTR(job_id, 1, 2) WHEN 'AD' THEN salary * 0.2
+                              WHEN 'SA' THEN salary * 0.1 
+                              WHEN 'IT' THEN salary * 0.08
+                              ELSE salary * 0.05
+    END bonus
+FROM employees;
+
+-- DECODE 함수
+SELECT first_name, job_id, salary,
+    SUBSTR(job_id, 1, 2),
+    DECODE(SUBSTR(job_id, 1, 2),    --  비교할 값
+                        'AD', salary * 0.2,
+                        'SA', salary * 0.1,
+                        'IT', salary * 0.08,
+                        salary * 0.05) bonus
+FROM employees;
+
+-- 연습문제
+-- 직원의 이름, 부서, 팀을 출력
+-- 팀은 부서 ID로 결정
+-- 10 ~ 30 : A-GROUP
+-- 40 ~ 50 : B-GROUP
+-- 60 ~ 100 : C-GROUP
+-- 나머지 부서 : REMAINDER
+SELECT first_name, department_id,
+    CASE WHEN department_id <= 30 THEN 'A-GROUP'
+        WHEN department_id <= 50 THEN 'B-GROUP'
+        WHEN department_id <= 100 THEN 'C-GROUP'
+        ELSE 'REMAINDER'
+    END team
+FROM employees;
