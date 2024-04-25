@@ -301,17 +301,17 @@ FROM nls_session_parameters;
 SELECT value FROM nls_session_parameters
 WHERE parameter='NLS_DATE_FORMAT';
 
--- 현재 날자 : SYSDATE
+-- 현재 날짜 : SYSDATE
 SELECT sysdate FROM dual;   -- 가상 테이블 dual로부터 받아오므로 1개의 레코드
 
 SELECT sysdate FROM employees;  --  employees 테이블로부터 받아오므로 employees 테이블 레코드의 갯수만큼
 
--- 날자 관련 단일행 함수
+-- 날짜 관련 단일행 함수
 SELECT
     sysdate,
-    ADD_MONTHS(sysdate, 2),  --  2개월이 지난 후의 날자
+    ADD_MONTHS(sysdate, 2),  --  2개월이 지난 후의 날짜
     LAST_DAY(sysdate),        -- 현재 달의 마지막 날
-    MONTHS_BETWEEN('12/09/24', sysdate), --  두 날자 사이의 개월 차
+    MONTHS_BETWEEN('12/09/24', sysdate), --  두 날짜 사이의 개월 차
     NEXT_DAY(sysdate, 7),      --      1:일 ~ 7:토
     NEXT_DAY(sysdate, '일'),     --  NLS_DATE_LANGUAGE의 설정에 따름
     ROUND(sysdate, 'MONTH'),     --  MONTH를 기준으로 반올림
