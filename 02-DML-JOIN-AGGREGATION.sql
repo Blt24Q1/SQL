@@ -164,3 +164,7 @@ SELECT
     man.first_name
 --FROM employees emp JOIN employees man
 --        ON emp.manager_id = man.employee_id;
+FROM employees emp, employees man
+WHERE emp.manager_id = man.employee_id; --  106
+
+-- 해봅시다. Steven (매니저 없는 분)까지 포함해서 출력
