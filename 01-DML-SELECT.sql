@@ -420,4 +420,5 @@ SELECT first_name, department_id,
         WHEN department_id <= 100 THEN 'C-GROUP'
         ELSE 'REMAINDER'
     END team
-FROM employees;
+FROM employees
+ORDER BY team ASC, department_id ASC;
