@@ -227,3 +227,95 @@ SELECT * FROM author;
 -- 특정 레코드의 컬럼 값을 변경한다
 -- WHERE 절이 없으면 모든 레코드가 변경
 -- 가급적 WHERE 절로 변경하고자 하는 레코드를 지정하도록 함
+
+UPDATE author
+SET author_desc = '알쓸신잡 출연';
+
+SELECT * FROM author;
+
+ROLLBACK;
+
+SELECT * FROM author;
+
+UPDATE author
+SET author_desc = '알쓸신잡 출연'
+WHERE author_name = '김영하';
+
+SELECT * FROM author;
+
+COMMIT;
+
+-- DELETE
+-- 테이블로부터 특정 레코드를 삭제
+-- WHERE 절이 없으면 모든 레코드 삭제 (주의)
+
+-- 연습
+-- hr.employees 테이블을 기반으로 department_id 10, 20, 30인 직원들만 새테이블 emp123으로 생성
+DROP TABLE emp123;
+CREATE TABLE emp123 AS
+    (SELECT * FROM hr.employees
+        WHERE department_id IN (10, 20, 30));
+DESC emp123;
+SELECT first_name, salary, department_id FROM emp123;
+
+-- 부서가 30인 직원들의 급여를 10% 인상
+UPDATE emp123
+SET salary = salary + salary * 0.1
+WHERE department_id = 30;
+
+SELECT * FROM emp123;
+
+-- JOB_ID MK_로 시작하는 직원들 삭제
+DELETE FROM emp123
+WHERE job_id LIKE 'MK_%';
+
+SELECT * FROM emp123;
+
+DELETE FROM emp123; --  WHERE 절이 생략된 DELETE문은 모든 레코드를 삭제 -> 주의
+SELECT * FROM emp123;
+
+ROLLBACK;
+
+
+--------------------
+-- TRANSACTION
+--------------------
+
+-- 트랜잭션 테스트 테이블
+CREATE TABLE t_test(
+    log_text VARCHAR2(100)
+);
+
+-- 첫 번째 DML이 수행된 시점에서 Transaction
+INSERT INTO t_test VALUES('트랜잭션 시작');
+SELECT * FROM t_test;
+INSERT INTO t_test VALUES('데이터 INSERT');
+SELECT * FROM t_test;
+
+SAVEPOINT sp1;  --  세이브 포인트 설정
+
+INSERT INTO t_test VALUES('데이터 2 INSERT');
+
+SELECT * FROM t_test;
+
+SAVEPOINT sp2;  --  세이브 포인트 설정
+
+UPDATE t_test SET log_text = '업데이트';
+
+SELECT * FROM t_test;
+
+ROLLBACK TO sp1;   --  sp1로 귀환
+
+SELECT * FROM t_test;
+
+INSERT INTO t_test VALUES('데이터 3 INSERT');
+
+SELECT * FROM t_test;
+
+-- 반영: COMMIT or 취소: ROLLBACK
+-- 명시적으로 Transaction 종료
+
+COMMIT;
+SELECT * FROM t_test;
+
+
