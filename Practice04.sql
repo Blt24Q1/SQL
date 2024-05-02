@@ -196,7 +196,7 @@ WHERE rn >= 11 AND
     rn <= 15;
 
 -- ROW_NUMBER 함수 사용
-SELECT employee_id, first_name, salary, hire_date
+SELECT rnum, employee_id, first_name, salary, hire_date
 FROM
     (SELECT employee_id, first_name, salary, hire_date,
             ROW_NUMBER() OVER (ORDER BY hire_date) AS rnum
@@ -204,7 +204,7 @@ FROM
 WHERE rnum >= 11 AND rnum <= 15;
 
 -- RANK 함수 사용
-SELECT employee_id, first_name, salary, hire_date, rank
+SELECT rank, employee_id, first_name, salary, hire_date
 FROM (SELECT employee_id, first_name, salary, hire_date,
         RANK() OVER (ORDER BY hire_date ASC) AS rank
         FROM employees) 
