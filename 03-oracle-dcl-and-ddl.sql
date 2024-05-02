@@ -59,6 +59,17 @@ SELECT * FROM hr.employees; --  hr.employees에 select 할 수 있는 권한
 SELECT * FROM hr.departments;   -- hr.departments에 대한 권한은 없다.
 
 -- 현재 사용자에게 부여된 ROLE의 확인
+SELECT * FROM USER_ROLE_PRIVS;
+
+-- CONNECT와 RESOURCE 역할은 어떤 권한으로 구성되어 있는가?
+-- sysdba로 진행
+-- cmd
+-- sqlplus sys/oracle as sysdba
+-- DESC role_sys_privs;
+-- CONNECT롤에는 어떤 권한이 포함되어 있는가?
+-- SELECT privilege FROM role_sys_privs WHERE role='CONNECT';
+-- RESOURCE롤에는 어떤 권한이 포함되어 있는가?
+-- SELECT privilege FROM role_sys_privs WHERE role='RESOURCE';
 
 ---------------
 -- DDL
@@ -100,3 +111,50 @@ DROP TABLE emp_it;
 SELECT * FROM tabs;
 
 DESC book;
+
+-- author 테이블 생성
+CREATE TABLE author (
+    author_id NUMBER(10),
+    anthor_name VARCHAR2(100) NOT NULL,
+    author_desc VARCHAR2(500),
+    PRIMARY KEY (author_id)
+);
+
+DESC author;
+
+-- book 테이블의 author 컬럼 삭제
+-- 나중에 author_id 컬럼 추가 -> author.author_id와 참조 연결할 예정
+ALTER TABLE book DROP COLUMN author;
+DESC book;
+
+-- book 테이블에 author_id 컬럼 추가
+-- author.author_id를 참조하는 컬럼 author.author_id 컬럼과 같은 형태여야 한다.
+ALTER TABLE book ADD (author_id NUMBER(10));
+DESC book;
+DESC author;
+
+-- book 테이블의 book_id도 author 테이블의 PK와 같인 데이터타입 (NUMBER(10))으로 변경
+ALTER TABLE book MODIFY (book_id NUMBER(10));
+DESC book;
+
+-- book 테이블의 book_id 컬럼에 PRIMARY KEY 제약조건을 부여
+ALTER TABLE book
+ADD CONSTRAINT pk_book_id PRIMARY KEY (book_id);
+DESC book;
+
+-- book 테이블의 author_id 컬럼과 author 테이블의 author_id를 FK로 연결
+ALTER TABLE book
+ADD CONSTRAINT fk_author_id
+    FOREIGN KEY (author_id)
+        REFERENCES author(author_id);
+        
+-- DICTIONARY
+
+-- USER_ : 현재 로그인된 사용자에게 허용된 뷰
+-- ALL_ : 모든 사용자 뷰
+-- DBA_ : DBA에게 허용된 뷰
+
+-- 모든 딕셔너리 확인
+SELECT * FROM DICTIONARY;
+        
+-- 사용자 스키마 객체 : USER_OBJECTS
