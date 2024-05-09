@@ -176,7 +176,17 @@ CREATE TABLE book (
 );
 
 INSERT INTO book (title, pub_date, author_id) 
-VALUE ('토지', '1994-03-04', 1);
+VALUES ('토지', '1994-03-04', 1);
 INSERT INTO book (title, author_id)
-VALUE ('살인자의 기억법', 2);
+VALUES ('살인자의 기억법', 2);
 INSERT INTO book (title, author_id) VALUES ('쇼생크 탈출', 3);
+INSERT INTO book (title, author_id) VALUES ('삼체', 4);
+
+SELECT * FROM book;
+
+-- JOIN
+SELECT title 제목, 
+	pub_date 출판일, 
+    author_name 저자명, 
+    author_desc	'저자 상세'
+FROM book b JOIN author a ON a.author_id = b.author_id;
